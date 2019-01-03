@@ -2,6 +2,16 @@
 
 This is a little script to allow everyone to install easily the NordVPN app instead of the openvpn configuration files
 
+## How to use it ##
+
+To install nordvpn
+
+`./nordvpn.sh install`
+
+To uninstall nordvpn
+
+`./nordvpn.sh purge`
+
 ## Tested on ##
 
 What it has been tested on so far!
