@@ -59,11 +59,12 @@ uninstall_nordvpn(){
     echo "NordVPN has been removed!"
 }
 
-if [ $1 -z ]; then
+if [ -z $1 ]; then
     print_usage
     exit 1
 fi
 
+install_dependencies
 extract_arch_package
 retrieve_nordvpn_deb
 handle_deb_file
