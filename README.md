@@ -24,4 +24,4 @@ The script installs the dependencies for you! If a package is missing in the ins
 
 ----
 
-Feel free to open issues, make PRs, improve the script anything!
+Feel free to open issues, make PRs, improve the script, anything you may think could help!
