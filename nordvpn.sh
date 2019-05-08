@@ -2,7 +2,7 @@
 
 ARCH=$(uname -m)
 ARCH_PACKAGE=""
-NORDVPN_VERSION="2.1.0-5"
+NORDVPN_VERSION="3.0.0-4"
 PACKAGE_NAME="nordvpn"
 
 print_usage(){
@@ -33,7 +33,6 @@ retrieve_nordvpn_deb(){
     echo ""
     PACKAGE_NAME="nordvpn_${NORDVPN_VERSION}_${ARCH_PACKAGE}.deb"
     wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/$PACKAGE_NAME
-
 }
 
 handle_deb_file(){
@@ -45,7 +44,7 @@ handle_deb_file(){
 }
 
 install_nordvpn(){
-    sudo cp -R nordvpn/etc/systemd /etc
+    sudo cp -R /usr/lib/systemd/ /etc/systemd/
     sudo cp -R nordvpn/usr /
     sudo cp -R nordvpn/var /
     sudo sh nordvpn/install/doinst.sh configure
@@ -64,13 +63,13 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-install_dependencies
 extract_arch_package
 retrieve_nordvpn_deb
 handle_deb_file
 
 case $1 in
     install)
+	install_dependencies
         install_nordvpn
         ;;
     remove|purge)
