@@ -17,6 +17,7 @@ To uninstall nordvpn
 What it has been tested on so far!
 
 * Fedora 29
+* OpenSUSE TW
 
 ## Dependencies ##
 
