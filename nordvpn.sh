@@ -11,11 +11,19 @@ print_usage(){
 }
 
 install_dependencies(){
-    sudo dnf install gpg wget openvpn alien
+    if [ -x "$(command -v dnf)" ]; then
+        sudo dnf install gpg wget openvpn alien
+    elif [ -x "$(command -v zypper)" ]; then
+        wget http://download.opensuse.org/repositories/home:/woelfel/openSUSE_Tumbleweed/noarch/alien-8.95-1.3.noarch.rpm
+        sudo zypper in gpp wget openvpn
+        if [ !-x "$(command -v alient)"]; then
+		    sudo zypper in ./alien*.rpm
+        fi
+    fi
 }
 
 extract_arch_package(){
-    case $ARCH in 
+    case $ARCH in
         "x86_64")
             ARCH_PACKAGE="amd64"
             ;;
@@ -27,6 +35,7 @@ extract_arch_package(){
 
 clean_up_folder(){
     rm -rf nordvpn *{tgz,deb}*
+    rm alien*
 }
 
 retrieve_nordvpn_deb(){
@@ -50,11 +59,20 @@ install_nordvpn(){
     sudo sh nordvpn/install/doinst.sh configure
 }
 
+reload_systemd(){
+   sudo systemctl daemon-reload
+   sudo systemctl --now enable nordvpnsd.service
+   systemctl --now --user enable nordvpnud.service
+   echo "Enabled services with --now flag"
+   echo "******************************"
+}
+
 uninstall_nordvpn(){
     sudo sh nordvpn/install/predelete.sh remove
     sed -i '/rm -f \/etc\/init.d\/nordvpn/d' nordvpn/install/delete.sh
     sudo sh nordvpn/install/delete.sh purge
     sudo rm /usr/bin/nordvpn
+    sudo find /etc/systemd -name "nordvpn*" -exec rm {} \;
     echo "NordVPN has been removed!"
 }
 
@@ -63,14 +81,15 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-extract_arch_package
-retrieve_nordvpn_deb
-handle_deb_file
 
 case $1 in
     install)
-	install_dependencies
+        extract_arch_package
+        retrieve_nordvpn_deb
+        handle_deb_file
+	    install_dependencies
         install_nordvpn
+        reload_systemd
         ;;
     remove|purge)
         uninstall_nordvpn
