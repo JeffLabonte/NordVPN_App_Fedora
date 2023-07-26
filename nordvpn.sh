@@ -87,7 +87,7 @@ case $1 in
         extract_arch_package
         retrieve_nordvpn_deb
         handle_deb_file
-	    install_dependencies
+	install_dependencies
         install_nordvpn
         reload_systemd
         ;;
